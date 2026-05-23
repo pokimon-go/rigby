@@ -1,0 +1,22 @@
+# Environment variables (YOUR SECRETS — never push these)
+.env
+.env.local
+.env.production
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editor folders
+.vscode/
+.idea/
+
+# Logs
+*.log
+logs/
+
+# Node (if we ever add it)
+node_modules/
+
+# Vercel
+.vercel
