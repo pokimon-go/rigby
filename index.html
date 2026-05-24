@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rigby — Community</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">Rigby</a>
+
+      <div class="nav-links">
+        <a href="/">Feed</a>
+        <a href="/downloads">Downloads</a>
+      </div>
+
+      <div class="nav-right">
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">🌙</button>
+        <div id="nav-auth">
+          <!-- Filled by JS based on login state -->
+          <a href="/login" class="btn btn-secondary btn-sm">Login</a>
+          <a href="/register" class="btn btn-primary btn-sm">Sign Up</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <div class="page-wrapper">
+    <div class="container">
+
+      <!-- HERO — shown to logged-out users -->
+      <section id="hero" style="text-align:center; padding: 4rem 0 2rem;">
+        <h1 style="font-size:2.5rem; font-weight:700; margin-bottom:1rem;">
+          Welcome to <span style="color:var(--accent)">Rigby</span>
+        </h1>
+        <p style="font-size:1.125rem; color:var(--text-secondary); max-width:500px; margin:0 auto 2rem;">
+          A community for builders, learners and makers.
+          Share ideas, download resources, connect with others.
+        </p>
+        <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+          <a href="/register" class="btn btn-primary btn-lg">Join the community</a>
+          <a href="/login" class="btn btn-secondary btn-lg">Sign in</a>
+        </div>
+      </section>
+
+      <!-- FEED -->
+      <section id="feed" style="max-width:680px; margin:0 auto; padding-bottom:4rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+          <h2 style="font-size:1.25rem; font-weight:600;">Latest Posts</h2>
+          <button id="new-post-btn" class="btn btn-primary btn-sm" style="display:none">+ New Post</button>
+        </div>
+
+        <!-- Posts render here via JS -->
+        <div id="posts-container">
+          <div class="empty-state">
+            <div class="empty-state-icon">💬</div>
+            <div class="empty-state-text">No posts yet</div>
+            <p style="margin-top:0.5rem">Be the first to post something</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/posts.js"></script>
+  <script>
+    // Dark mode toggle
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isDark = html.getAttribute('data-theme') === 'dark';
+      html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      document.querySelector('.theme-toggle').textContent = isDark ? '🌙' : '☀️';
+      localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    }
+
+    // Apply saved theme on load
+    const saved = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', saved);
+    document.querySelector('.theme-toggle').textContent = saved === 'dark' ? '☀️' : '🌙';
+  </script>
+</body>
+</html>
