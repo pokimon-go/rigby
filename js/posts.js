@@ -15,11 +15,12 @@ async function loadFeed() {
     .select(`
       id, title, content, created_at,
       profiles (username),
-      likes (id),
+      likes (id, user_id),
       comments (id)
     `)
     .order('created_at', { ascending: false });
 
+ console.log('Posts fetched:', posts, 'Error:', error);
   if (error || !posts?.length) {
     container.innerHTML = `
       <div class="empty-state">
