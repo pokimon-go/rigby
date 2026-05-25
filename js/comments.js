@@ -2,26 +2,31 @@
 // RIGBY — Comments Logic
 // ============================================
 
-// Get post ID from URL (?id=xxx)
 const postId = new URLSearchParams(window.location.search).get('id');
 
 async function loadPost() {
   if (!postId) { window.location.href = '/'; return; }
 
-  // Load post
   const { data: post } = await sb
     .from('posts')
-    .select('*, profiles(username), likes(id,user_id)')
+    .select('*')
     .eq('id', postId)
     .single();
 
   if (!post) { window.location.href = '/'; return; }
 
+  const [profileRes, likesRes] = await Promise.all([
+    sb.from('profiles').select('id, username').eq('id', post.user_id).single(),
+    sb.from('likes').select('id, user_id').eq('post_id', postId)
+  ]);
+
+  const username = profileRes.data?.username || 'unknown';
+  const likes = likesRes.data || [];
+
   const { data: { session } } = await sb.auth.getSession();
   const userId = session?.user?.id;
-  const liked = post.likes?.some(l => l.user_id === userId);
+  const liked = likes.some(l => l.user_id === userId);
   const date = new Date(post.created_at).toLocaleDateString();
-  const username = post.profiles?.username || 'unknown';
 
   document.title = `${post.title} — Rigby`;
 
@@ -43,7 +48,7 @@ async function loadPost() {
         id="like-btn"
         style="color:${liked ? 'var(--accent)' : 'var(--text-secondary)'}"
       >
-        ♥ ${post.likes?.length || 0}
+        ❤ ${likes.length || 0}
       </button>
       ${userId === post.user_id ? `
         <button class="btn btn-danger btn-sm" onclick="deletePost('${post.id}')">Delete post</button>
@@ -51,7 +56,6 @@ async function loadPost() {
     </div>
   `;
 
-  // Show comment form or login prompt
   if (userId) {
     document.getElementById('comment-form').style.display = 'block';
   } else {
@@ -64,7 +68,7 @@ async function loadPost() {
 async function loadComments() {
   const { data: comments } = await sb
     .from('comments')
-    .select('*, profiles(username)')
+    .select('*')
     .eq('post_id', postId)
     .order('created_at', { ascending: true });
 
@@ -81,8 +85,12 @@ async function loadComments() {
     return;
   }
 
+  const userIds = [...new Set(comments.map(c => c.user_id))];
+  const { data: profiles } = await sb.from('profiles').select('id, username').in('id', userIds);
+  const profileMap = Object.fromEntries((profiles || []).map(p => [p.id, p.username]));
+
   list.innerHTML = comments.map(c => {
-    const username = c.profiles?.username || 'unknown';
+    const username = profileMap[c.user_id] || 'unknown';
     const date = new Date(c.created_at).toLocaleDateString();
     return `
       <div style="display:flex;gap:0.75rem;margin-bottom:1rem">
@@ -103,7 +111,8 @@ async function loadComments() {
             ${escapeHtml(c.content)}
           </p>
         </div>
-      </div>`;
+      </div>
+    `;
   }).join('');
 }
 
