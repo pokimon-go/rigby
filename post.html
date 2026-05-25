@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post — Rigby</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">Rigby</a>
+      <div class="nav-right">
+        <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+        <div id="nav-auth"></div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <div class="container" style="max-width:680px;padding-top:2rem;padding-bottom:4rem">
+
+      <!-- Back link -->
+      <a href="/" style="font-size:0.875rem;color:var(--text-muted);display:inline-flex;align-items:center;gap:0.25rem;margin-bottom:1.5rem">
+        ← Back to feed
+      </a>
+
+      <!-- Post content -->
+      <div id="post-content" class="card" style="margin-bottom:1.5rem">
+        <p style="color:var(--text-muted);text-align:center;padding:2rem">Loading...</p>
+      </div>
+
+      <!-- Comments section -->
+      <div style="margin-bottom:1.5rem">
+        <h3 style="font-size:1rem;font-weight:600;margin-bottom:1rem" id="comment-count">Comments</h3>
+        <div id="comments-list"></div>
+      </div>
+
+      <!-- Add comment -->
+      <div class="card" id="comment-form" style="display:none">
+        <div class="form-group" style="margin-bottom:0.75rem">
+          <textarea class="form-input" id="comment-input" placeholder="Write a comment..." rows="3"></textarea>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="submitComment()">Post comment</button>
+      </div>
+
+      <p id="login-to-comment" style="display:none;font-size:0.875rem;color:var(--text-muted)">
+        <a href="/login">Sign in</a> to leave a comment.
+      </p>
+
+    </div>
+  </div>
+
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/comments.js"></script>
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isDark = html.getAttribute('data-theme') === 'dark';
+      html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      document.querySelector('.theme-toggle').textContent = isDark ? '🌙' : '☀️';
+      localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    }
+    const saved = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', saved);
+    document.querySelector('.theme-toggle').textContent = saved === 'dark' ? '☀️' : '🌙';
+  </script>
+</body>
+</html>
