@@ -10,17 +10,17 @@ async function loadFeed() {
 
   container.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:2rem">Loading...</p>';
 
+  const { data: { session } } = await sb.auth.getSession();
+  const userId = session?.user?.id;
+
+  // Fetch posts
   const { data: posts, error } = await sb
     .from('posts')
-    .select(`
-      id, title, content, created_at,
-      profiles (username),
-      likes (id, user_id),
-      comments (id)
-    `)
+    .select('id, title, content, created_at, user_id')
     .order('created_at', { ascending: false });
 
- console.log('Posts fetched:', posts, 'Error:', error);
+  console.log('Posts:', posts, 'Error:', error);
+
   if (error || !posts?.length) {
     container.innerHTML = `
       <div class="empty-state">
@@ -31,16 +31,28 @@ async function loadFeed() {
     return;
   }
 
-  const { data: { session } } = await sb.auth.getSession();
-  const userId = session?.user?.id;
+  // Fetch all needed data in parallel
+  const userIds = [...new Set(posts.map(p => p.user_id))];
+  const postIds = posts.map(p => p.id);
+
+  const [profilesRes, likesRes, commentsRes] = await Promise.all([
+    sb.from('profiles').select('id, username').in('id', userIds),
+    sb.from('likes').select('post_id, user_id').in('post_id', postIds),
+    sb.from('comments').select('post_id').in('post_id', postIds)
+  ]);
+
+  const profiles  = profilesRes.data || [];
+  const likes     = likesRes.data || [];
+  const comments  = commentsRes.data || [];
 
   container.innerHTML = posts.map(post => {
-    const liked = post.likes?.some(l => l.user_id === userId);
-    const likeCount = post.likes?.length || 0;
-    const commentCount = post.comments?.length || 0;
-    const date = new Date(post.created_at).toLocaleDateString();
-    const username = post.profiles?.username || 'unknown';
-    const initial = username[0].toUpperCase();
+    const profile     = profiles.find(p => p.id === post.user_id);
+    const username    = profile?.username || 'unknown';
+    const postLikes   = likes.filter(l => l.post_id === post.id);
+    const postComments= comments.filter(c => c.post_id === post.id);
+    const liked       = postLikes.some(l => l.user_id === userId);
+    const date        = new Date(post.created_at).toLocaleDateString();
+    const initial     = username[0].toUpperCase();
 
     return `
       <div class="post-card" style="margin-bottom:1rem" onclick="window.location='/post?id=${post.id}'">
@@ -63,10 +75,10 @@ async function loadFeed() {
             data-post-id="${post.id}"
             data-liked="${liked}"
           >
-            ♥ ${likeCount}
+            ♥ ${postLikes.length}
           </button>
           <span style="font-size:0.875rem;color:var(--text-muted)">
-            💬 ${commentCount}
+            💬 ${postComments.length}
           </span>
         </div>
       </div>`;
