@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Downloads — Rigby</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-brand">Rigby</a>
+      <div class="nav-links">
+        <a href="/" class="nav-link">Feed</a>
+        <a href="/downloads" class="nav-link">Downloads</a>
+      </div>
+      <div class="nav-actions" id="nav-actions"></div>
+    </div>
+  </nav>
+
+  <main class="container" style="max-width:800px;margin:2rem auto;padding:0 1rem">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
+      <h1 style="font-size:1.5rem;font-weight:700">Downloads</h1>
+      <button id="upload-btn" class="btn btn-primary btn-sm"
+        style="display:none" onclick="toggleUploadForm()">+ Upload File</button>
+    </div>
+
+    <div id="upload-form" class="card" style="display:none;margin-bottom:1.5rem">
+      <h2 style="font-size:1rem;font-weight:600;margin-bottom:1rem">Upload New File</h2>
+      <div class="form-group">
+        <label class="form-label">File (max 50MB)</label>
+        <input type="file" id="file-input" class="form-input">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description (optional)</label>
+        <input type="text" id="file-description" class="form-input"
+          placeholder="Brief description of the file">
+      </div>
+      <div id="upload-progress" style="display:none;margin-bottom:1rem">
+        <div style="font-size:0.875rem;color:var(--text-muted);margin-bottom:0.5rem">Uploading...</div>
+        <div style="height:4px;background:var(--border);border-radius:2px">
+          <div id="progress-bar"
+            style="height:100%;background:var(--accent);border-radius:2px;width:0%;transition:width 0.3s">
+          </div>
+        </div>
+      </div>
+      <div id="upload-error" class="alert alert-error" style="display:none"></div>
+      <button class="btn btn-primary" onclick="uploadFile()">Upload</button>
+    </div>
+
+    <div id="downloads-list">
+      <div style="color:var(--text-muted);font-size:0.875rem">Loading files...</div>
+    </div>
+  </main>
+
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/downloads.js"></script>
+</body>
+</html>
