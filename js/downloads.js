@@ -2,6 +2,8 @@
 // RIGBY — Downloads Logic
 // ============================================
 
+const postId = null;
+
 async function initDownloads() {
   await checkSession();
 
@@ -28,7 +30,7 @@ async function loadDownloads() {
     .order('created_at', { ascending: false });
 
   if (!files?.length) {
-    list.innerHTML = `<div class="empty-state"><p>No files available yet.</p></div>`;
+    list.innerHTML = '<div class="empty-state"><p>No files available yet.</p></div>';
     return;
   }
 
@@ -51,41 +53,20 @@ async function loadDownloads() {
     const username = profileMap[f.uploaded_by] || 'admin';
     const date = new Date(f.created_at).toLocaleDateString();
     const size = formatFileSize(f.file_size);
-
-    return `
-      <div class="card" style="margin-bottom:1rem;display:flex;align-items:center;gap:1rem">
-        <div style="font-size:2rem">📄</div>
-        <div style="flex:1;min-width:0">
-          <div style="font-weight:600;margin-bottom:0.25rem;
-            overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
-            ${escapeHtml(f.filename)}
-          </div>
-          ${f.description
-            ? `<div style="font-size:0.875rem;color:var(--text-secondary);margin-bottom:0.25rem">
-                ${escapeHtml(f.description)}
-               </div>`
-            : ''}
-          <div style="font-size:0.75rem;color:var(--text-muted)">
-            @${username} · ${date} · ${size}
-          </div>
-        </div>
-        <div style="display:flex;gap:0.5rem;flex-shrink:0">
-          ${userId
-            ? `<button class="btn btn-primary btn-sm"
-                onclick="downloadFile('${f.file_path}', '${escapeHtml(f.filename)}')">
-                Download
-               </button>`
-            : `<a href="/login" class="btn btn-secondary btn-sm">Login to download</a>`
-          }
-          ${isAdmin
-            ? `<button class="btn btn-danger btn-sm"
-                onclick="deleteFile('${f.id}', '${f.file_path}')">
-                Delete
-               </button>`
-            : ''}
-        </div>
-      </div>
-    `;
+    return '<div class="card" style="margin-bottom:1rem;display:flex;align-items:center;gap:1rem">' +
+      '<div style="font-size:2rem">📄</div>' +
+      '<div style="flex:1;min-width:0">' +
+        '<div style="font-weight:600;margin-bottom:0.25rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + escapeHtml(f.filename) + '</div>' +
+        (f.description ? '<div style="font-size:0.875rem;color:var(--text-secondary);margin-bottom:0.25rem">' + escapeHtml(f.description) + '</div>' : '') +
+        '<div style="font-size:0.75rem;color:var(--text-muted)">@' + username + ' · ' + date + ' · ' + size + '</div>' +
+      '</div>' +
+      '<div style="display:flex;gap:0.5rem;flex-shrink:0">' +
+        (userId
+          ? '<button class="btn btn-primary btn-sm" onclick="downloadFile(\'' + f.file_path + '\',\'' + escapeHtml(f.filename) + '\')">Download</button>'
+          : '<a href="/login" class="btn btn-secondary btn-sm">Login to download</a>') +
+        (isAdmin ? '<button class="btn btn-danger btn-sm" onclick="deleteFile(\'' + f.id + '\',\'' + f.file_path + '\')">Delete</button>' : '') +
+      '</div>' +
+    '</div>';
   }).join('');
 }
 
@@ -124,21 +105,17 @@ async function uploadFile() {
   if (!fileInput.files[0]) { showUploadError('Please select a file.'); return; }
 
   const file = fileInput.files[0];
-  if (file.size > 50 * 1024 * 1024) {
-    showUploadError('File exceeds 50MB limit.');
-    return;
-  }
+  if (file.size > 50 * 1024 * 1024) { showUploadError('File exceeds 50MB limit.'); return; }
 
   const { data: { session } } = await sb.auth.getSession();
   if (!session) { window.location.href = '/login'; return; }
 
-  const filePath = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+  const filePath = Date.now() + '_' + file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
 
   progressDiv.style.display = 'block';
   progressBar.style.width = '30%';
 
-  const { error: uploadError } = await sb.storage
-    .from('downloads').upload(filePath, file);
+  const { error: uploadError } = await sb.storage.from('downloads').upload(filePath, file);
 
   if (uploadError) {
     progressDiv.style.display = 'none';
@@ -182,9 +159,9 @@ async function deleteFile(id, filePath) {
 
 function formatFileSize(bytes) {
   if (!bytes) return 'Unknown size';
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
 }
 
 function showUploadError(msg) {
@@ -194,11 +171,7 @@ function showUploadError(msg) {
 }
 
 function escapeHtml(str) {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 initDownloads();
