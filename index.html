@@ -25,6 +25,7 @@
 
       <div class="nav-right">
         <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">🌙</button>
+        <button class="hamburger" onclick="toggleMobileMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
         <div id="nav-auth">
           <!-- Filled by JS based on login state -->
           <a href="/login" class="btn btn-secondary btn-sm">Login</a>
@@ -33,6 +34,14 @@
       </div>
     </div>
   </nav>
+<div id="mobile-menu" class="mobile-menu">
+  <div class="mobile-menu-header">
+    <a href="/" class="nav-logo">Rigby</a>
+    <button class="mobile-menu-close" onclick="toggleMobileMenu()">&#x2715;</button>
+  </div>
+  <a href="/" onclick="toggleMobileMenu()">Feed</a>
+  <a href="/downloads" onclick="toggleMobileMenu()">Downloads</a>
+</div>
 
   <!-- MAIN CONTENT -->
   <div class="page-wrapper">

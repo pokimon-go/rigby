@@ -158,3 +158,8 @@ function toggleTheme() {
     if (btn) btn.textContent = saved === 'dark' ? '☀️' : '🌙';
   });
 })();
+
+function toggleMobileMenu() {
+  const menu = document.getElementById('mobile-menu');
+  if (menu) menu.classList.toggle('open');
+}
