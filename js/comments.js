@@ -119,7 +119,7 @@ async function loadComments() {
 async function submitComment() {
   const input = document.getElementById('comment-input');
   const content = input.value.trim();
-  if (!content) return;
+  if (!content) { showToast('Please write a comment first', 'error'); return; }
 
   const { data: { session } } = await sb.auth.getSession();
   if (!session) { window.location.href = '/login'; return; }

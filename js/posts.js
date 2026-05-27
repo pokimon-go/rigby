@@ -59,7 +59,7 @@ async function loadFeed() {
         <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem">
           <div class="avatar">${initial}</div>
           <div>
-            <div style="font-weight:600;font-size:0.875rem">@${username}</div>
+            <a href="/profile?id=${post.user_id}" style="font-weight:600;font-size:0.875rem;color:var(--text-primary);text-decoration:none">@${username}</a>
             <div style="font-size:0.75rem;color:var(--text-muted)">${date}</div>
           </div>
         </div>
