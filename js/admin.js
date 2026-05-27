@@ -147,4 +147,3 @@ function escapeHtml(str) {
 }
 
 initAdmin();
-
