@@ -5,6 +5,18 @@ async function initDownloads() {
 
 async function loadDownloads() {
   const list = document.getElementById('downloads-list');
+
+  const { data: { session } } = await sb.auth.getSession();
+  const userId = session?.user?.id;
+
+  let isAdmin = false;
+  if (userId) {
+    const { data: profile } = await sb.from('profiles').select('role').eq('id', userId).single();
+    isAdmin = profile?.role === 'admin';
+  }
+
+  if (isAdmin) document.getElementById('upload-btn').style.display = 'block';
+
   try {
     const { data: files, error } = await sb
       .from('downloads')
@@ -21,17 +33,6 @@ async function loadDownloads() {
     const userIds = [...new Set(files.map(f => f.uploaded_by).filter(Boolean))];
     const { data: profiles } = await sb.from('profiles').select('id, username').in('id', userIds);
     const profileMap = Object.fromEntries((profiles || []).map(p => [p.id, p.username]));
-
-    const { data: { session } } = await sb.auth.getSession();
-    const userId = session?.user?.id;
-
-    let isAdmin = false;
-    if (userId) {
-      const { data: profile } = await sb.from('profiles').select('role').eq('id', userId).single();
-      isAdmin = profile?.role === 'admin';
-    }
-
-    if (isAdmin) document.getElementById('upload-btn').style.display = 'block';
 
     list.innerHTML = files.map(f => {
       const username = profileMap[f.uploaded_by] || 'admin';
