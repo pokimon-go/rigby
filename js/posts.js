@@ -168,3 +168,13 @@ function escapeHtml(str) {
 
 // Load feed on page load
 loadFeed();
+
+function filterFeed(query) {
+  const cards = document.querySelectorAll('#feed .post-card');
+  const q = query.toLowerCase().trim();
+  cards.forEach(card => {
+    const title = card.querySelector('.post-card-title')?.textContent.toLowerCase() || '';
+    const content = card.textContent.toLowerCase() || '';
+    card.style.display = (!q || title.includes(q) || content.includes(q)) ? 'block' : 'none';
+  });
+}
