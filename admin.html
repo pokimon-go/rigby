@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Rigby</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">Rigby</a>
+      <div class="nav-links">
+        <a href="/">Feed</a>
+        <a href="/downloads">Downloads</a>
+        <a href="/admin">Admin</a>
+      </div>
+      <div class="nav-right">
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">🌙</button>
+        <div id="nav-auth">
+          <a href="/login" class="btn btn-secondary btn-sm">Login</a>
+          <a href="/register" class="btn btn-primary btn-sm">Sign Up</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container" style="max-width:900px;margin:2rem auto;padding:0 1rem">
+    <h1 style="font-size:1.5rem;font-weight:700;margin-bottom:1.5rem">Admin Dashboard</h1>
+
+    <div id="stats" style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem">
+      <div class="card" style="text-align:center">
+        <div id="stat-users" style="font-size:2rem;font-weight:700">—</div>
+        <div style="font-size:0.875rem;color:var(--text-muted)">Users</div>
+      </div>
+      <div class="card" style="text-align:center">
+        <div id="stat-posts" style="font-size:2rem;font-weight:700">—</div>
+        <div style="font-size:0.875rem;color:var(--text-muted)">Posts</div>
+      </div>
+      <div class="card" style="text-align:center">
+        <div id="stat-comments" style="font-size:2rem;font-weight:700">—</div>
+        <div style="font-size:0.875rem;color:var(--text-muted)">Comments</div>
+      </div>
+      <div class="card" style="text-align:center">
+        <div id="stat-files" style="font-size:2rem;font-weight:700">—</div>
+        <div style="font-size:0.875rem;color:var(--text-muted)">Files</div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:0.5rem;margin-bottom:1.5rem">
+      <button class="btn btn-primary btn-sm" onclick="showTab('users')">Users</button>
+      <button class="btn btn-secondary btn-sm" onclick="showTab('posts')">Posts</button>
+      <button class="btn btn-secondary btn-sm" onclick="showTab('comments')">Comments</button>
+    </div>
+
+    <div id="tab-users"></div>
+    <div id="tab-posts" style="display:none"></div>
+    <div id="tab-comments" style="display:none"></div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
