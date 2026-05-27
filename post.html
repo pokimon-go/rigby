@@ -17,10 +17,19 @@
       <a href="/" class="nav-logo">Rigby</a>
       <div class="nav-right">
         <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+        <button class="hamburger" onclick="toggleMobileMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
         <div id="nav-auth"></div>
       </div>
     </div>
   </nav>
+<div id="mobile-menu" class="mobile-menu">
+  <div class="mobile-menu-header">
+    <a href="/" class="nav-logo">Rigby</a>
+    <button class="mobile-menu-close" onclick="toggleMobileMenu()">&#x2715;</button>
+  </div>
+  <a href="/" onclick="toggleMobileMenu()">Feed</a>
+  <a href="/downloads" onclick="toggleMobileMenu()">Downloads</a>
+</div>
 
   <div class="page-wrapper">
     <div class="container" style="max-width:680px;padding-top:2rem;padding-bottom:4rem">

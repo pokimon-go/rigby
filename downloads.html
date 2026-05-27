@@ -16,9 +16,18 @@
         <a href="/downloads" class="nav-link">Downloads</a>
       </div>
       <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">🌙</button>
-      <div id="nav-auth"><a href="/login" class="btn btn-secondary btn-sm">Login</a><a href="/register" class="btn btn-primary btn-sm">Sign Up</a></div>
+      <button class="hamburger" onclick="toggleMobileMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+        <div id="nav-auth"><a href="/login" class="btn btn-secondary btn-sm">Login</a><a href="/register" class="btn btn-primary btn-sm">Sign Up</a></div>
     </div>
   </nav>
+<div id="mobile-menu" class="mobile-menu">
+  <div class="mobile-menu-header">
+    <a href="/" class="nav-logo">Rigby</a>
+    <button class="mobile-menu-close" onclick="toggleMobileMenu()">&#x2715;</button>
+  </div>
+  <a href="/" onclick="toggleMobileMenu()">Feed</a>
+  <a href="/downloads" onclick="toggleMobileMenu()">Downloads</a>
+</div>
 
   <main class="container" style="max-width:800px;margin:2rem auto;padding:0 1rem">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
