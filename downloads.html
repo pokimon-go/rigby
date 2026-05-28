@@ -59,7 +59,8 @@
       <button class="btn btn-primary" onclick="uploadFile()">Upload</button>
     </div>
 
-    <div id="downloads-list">
+    <div style="margin-bottom:1rem"><input type="text" id="download-search" class="form-input" placeholder="Search files..." oninput="filterDownloads(this.value)"></div>
+  <div id="downloads-list">
       <div style="color:var(--text-muted);font-size:0.875rem">Loading files...</div>
     </div>
   </main>
