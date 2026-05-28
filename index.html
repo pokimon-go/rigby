@@ -63,7 +63,8 @@
       </section>
 
       <!-- FEED -->
-      <section id="feed" style="max-width:680px; margin:0 auto; padding-bottom:4rem;">
+      <div style="margin-bottom:1rem;max-width:680px;margin-left:auto;margin-right:auto"><input type="text" id="search-input" class="form-input" placeholder="Search posts..." oninput="filterFeed(this.value)"></div>
+  <section id="feed" style="max-width:680px; margin:0 auto; padding-bottom:4rem;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
           <h2 style="font-size:1.25rem; font-weight:600;">Latest Posts</h2>
           <button id="new-post-btn" class="btn btn-primary btn-sm" style="display:none" onclick="openModal()">+ New Post</button>
@@ -135,5 +136,6 @@
       </div>
     </div>
   </div>
+<div id="toast-container"></div>
 </body>
 </html>

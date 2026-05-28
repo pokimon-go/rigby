@@ -59,7 +59,7 @@ async function loadFeed() {
         <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem">
           <div class="avatar">${initial}</div>
           <div>
-            <div style="font-weight:600;font-size:0.875rem">@${username}</div>
+            <a href="/profile?id=${post.user_id}" style="font-weight:600;font-size:0.875rem;color:var(--text-primary);text-decoration:none">@${username}</a>
             <div style="font-size:0.75rem;color:var(--text-muted)">${date}</div>
           </div>
         </div>
@@ -168,3 +168,13 @@ function escapeHtml(str) {
 
 // Load feed on page load
 loadFeed();
+
+function filterFeed(query) {
+  const cards = document.querySelectorAll('#feed .post-card');
+  const q = query.toLowerCase().trim();
+  cards.forEach(card => {
+    const title = card.querySelector('.post-card-title')?.textContent.toLowerCase() || '';
+    const content = card.textContent.toLowerCase() || '';
+    card.style.display = (!q || title.includes(q) || content.includes(q)) ? 'block' : 'none';
+  });
+}

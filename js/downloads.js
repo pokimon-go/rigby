@@ -132,3 +132,12 @@ function escapeHtml(str) {
 initDownloads();
 
 
+
+function filterDownloads(query) {
+  const cards = document.querySelectorAll('#downloads-list .card');
+  const q = query.toLowerCase().trim();
+  cards.forEach(card => {
+    const text = card.textContent.toLowerCase();
+    card.style.display = (!q || text.includes(q)) ? 'block' : 'none';
+  });
+}
