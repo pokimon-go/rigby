@@ -79,3 +79,5 @@ v0.6.0
 Profile page, mobile nav, spinners
 v1.0.0
 Search, toasts, final polish
+
+#FYI, I DID IT ALL ON TERMUX
